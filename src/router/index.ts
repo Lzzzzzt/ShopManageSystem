@@ -1,5 +1,17 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
+import ShoppingView from '@/views/ShoppingView.vue'
+
+import StockView from '@/views/StoreHouse/StockView.vue'
+import StorehouseView from '@/views/StoreHouse/StorehouseView.vue'
+import ItemsView from '@/views/StoreHouse/Items/ItemsView.vue'
+import ItemAddView from '@/views/StoreHouse/Items/ItemAddView.vue'
+import PurchasePlanView from '@/views/StoreHouse/PurchasePlanView.vue'
+
+import ManageView from '@/views/Manage/ManageView.vue'
+import StuffView from '@/views/Manage/StuffView.vue'
+import VIPView from '@/views/Manage/VIPView.vue'
+import SupplierView from '@/views/Manage/SupplierView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -8,12 +20,60 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/shopping',
+    name: 'shopping',
+    component: ShoppingView
+  },
+  {
+    path: '/storehouse',
+    name: 'storehouse',
+    component: StorehouseView,
+    children: [
+      {
+        path: 'stock',
+        name: 'stock',
+        component: StockView
+      },
+      {
+        path: 'items',
+        name: 'items',
+        component: ItemsView,
+        children: [
+          {
+            path: 'add',
+            name: 'ItemAdd',
+            component: ItemAddView
+          }
+        ]
+      },
+      {
+        path: 'plan',
+        name: 'plan',
+        component: PurchasePlanView
+      }
+    ]
+  },
+  {
+    path: '/manage',
+    name: 'manage',
+    component: ManageView,
+    children: [
+      {
+        path: 'stuff',
+        name: 'stuff',
+        component: StuffView
+      },
+      {
+        path: 'vip',
+        name: 'vip',
+        component: VIPView
+      },
+      {
+        path: 'supplier',
+        name: 'supplier',
+        component: SupplierView
+      }
+    ]
   }
 ]
 
