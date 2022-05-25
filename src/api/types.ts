@@ -13,6 +13,8 @@ export interface CheckOrderItem {
 }
 
 export interface Order {
+  id: string,
+  stuffId: string,
   orderTime: string,
   price: number,
   state: number,

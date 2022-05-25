@@ -8,11 +8,11 @@ Mock.mock('/shopping/items', 'get', {
   data: getShoppingItems(Random.integer(10, 20))
 } as MyResponse)
 
-Mock.mock('/shopping/showOrder', 'get', {
-  status: 0,
-  msg: '',
-  data: getOrder()
-} as MyResponse)
+// Mock.mock('/shopping/showOrder', 'get', {
+//   status: 0,
+//   msg: '',
+//   data: getOrder()
+// } as MyResponse)
 
 Mock.mock('/shopping/isVip/:id', 'get', {
   status: 0,
@@ -48,6 +48,12 @@ Mock.mock('/manage/supplier/show', 'get', {
   status: 0,
   msg: '',
   data: getSuppliers(Random.integer(3, 10))
+} as MyResponse)
+
+Mock.mock('/shopping/checkOrder', 'post', {
+  status: 0,
+  msg: '',
+  data: getOrder()
 } as MyResponse)
 
 export default Mock

@@ -7,9 +7,9 @@ export function getShoppingItems (num = 10): Array<ShoppingItem> {
   for (let i = 0; i < num; i++) {
     data.push({
       id: Random.id(),
-      name: Random.cword(),
-      discount: Random.float(0, 50, 0, 9),
-      price: Random.float(50, 1000, 0, 9),
+      name: Random.cword(3, 10),
+      discount: Random.integer(0, 50),
+      price: Random.integer(50, 1000),
       stock: Random.integer(10, 20)
     })
   }
@@ -21,9 +21,11 @@ export function getOrder (): Order {
   const order = {} as Order
 
   order.orderTime = Random.datetime()
-  order.price = Random.float(300, 1000)
+  order.price = Random.integer(300, 10000)
   order.state = 1
   order.detail = getShoppingItems(Random.integer(3, 8))
+  order.id = Random.id()
+  order.stuffId = Random.id()
 
   return order
 }
