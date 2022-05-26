@@ -1,6 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
-import ShoppingView from '@/views/ShoppingView.vue'
+
+import PurchaseView from '@/views/Shopping/PurchaseView.vue'
+import ShoppingView from '@/views/Shopping/ShoppingView.vue'
+import ReturnView from '@/views/Shopping/ReturnView.vue'
 
 import StockView from '@/views/StoreHouse/StockView.vue'
 import StorehouseView from '@/views/StoreHouse/StorehouseView.vue'
@@ -22,7 +25,19 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/shopping',
     name: 'shopping',
-    component: ShoppingView
+    component: ShoppingView,
+    children: [
+      {
+        path: '/shopping/purchase',
+        name: 'purchaseItems',
+        component: PurchaseView
+      },
+      {
+        path: '/shopping/return',
+        name: 'return',
+        component: ReturnView
+      }
+    ]
   },
   {
     path: '/storehouse',

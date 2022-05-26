@@ -10,7 +10,7 @@ export function getShoppingItems (num = 10): Array<ShoppingItem> {
       name: Random.cword(3, 10),
       discount: Random.integer(0, 50),
       price: Random.integer(50, 1000),
-      stock: Random.integer(10, 20)
+      num: Random.integer(10, 20)
     })
   }
 

@@ -56,4 +56,16 @@ Mock.mock('/shopping/checkOrder', 'post', {
   data: getOrder()
 } as MyResponse)
 
+Mock.mock('/shopping/returnCheck', 'post', {
+  status: 0,
+  msg: '',
+  data: getOrder()
+} as MyResponse)
+
+Mock.mock('/shopping/return', 'post', {
+  status: 0,
+  msg: '',
+  data: null
+} as MyResponse)
+
 export default Mock

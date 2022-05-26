@@ -4,7 +4,7 @@ export interface ShoppingItem {
   name: string,
   discount: number,
   price: number,
-  stock: number
+  num: number
 }
 
 export interface CheckOrderItem {

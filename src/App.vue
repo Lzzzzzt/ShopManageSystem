@@ -5,14 +5,20 @@
   <el-row style="width: 100vw; height: 95vh;">
     <el-col :span="4">
       <el-menu style="height: 100%" router unique-opened>
-        <el-menu-item index="1" :route="{name: 'shopping'}">
+        <el-sub-menu index="1">
           <template #title>
             <el-icon>
               <ShoppingCart/>
             </el-icon>
-            <span>购物</span>
+            <span>超市</span>
           </template>
-        </el-menu-item>
+          <el-menu-item :route="{name: 'purchaseItems'}" index="1-1">
+            <span>购物</span>
+          </el-menu-item>
+          <el-menu-item :route="{name: 'return'}" index="1-2">
+            <span>退货</span>
+          </el-menu-item>
+        </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <el-icon>

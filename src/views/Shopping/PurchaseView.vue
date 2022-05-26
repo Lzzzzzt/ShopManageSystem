@@ -1,15 +1,21 @@
 <template>
   <el-row :gutter="20" justify="center" style="width: 90%; margin: 5% 5%; height: calc(95vh * 0.84);">
     <el-col :span="22">
-      <el-card header="商品" shadow="hover" style="height: 100%">
+      <el-card shadow="hover" style="height: 100%">
+        <template #header>
+          <div style="display:flex; justify-content: space-between">
+            <span>商品</span>
+            <el-button plain type="info">退货</el-button>
+          </div>
+        </template>
         <el-table height="600px" :data="items" stripe>
           <el-table-column label="商品名" prop="name"/>
           <el-table-column label="折扣" prop="discount"/>
           <el-table-column label="价格" prop="price"/>
-          <el-table-column label="库存" prop="stock"/>
+          <el-table-column label="库存" prop="num"/>
           <el-table-column label="操作">
             <template #default="scope">
-              <el-button @click="addItem(scope.row.id)" type="primary" plain :disabled="scope.row.stock <= 0">
+              <el-button :disabled="scope.row.num <= 0" plain type="primary" @click="addItemToCart(scope.row.id)">
                 购买
               </el-button>
             </template>
@@ -40,7 +46,7 @@
       <el-table-column prop="num" label="数量"></el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button type="danger" plain @click="removeItem(scope.row.id)">
+          <el-button plain type="danger" @click="removeItemFromCart(scope.row.id)">
             减少
           </el-button>
         </template>
@@ -53,21 +59,22 @@
   </el-dialog>
   <el-dialog v-model="orderDialogActive">
     <template #header>订单</template>
-    <el-row style="margin: 5px 0">
+    <el-row style="margin: 20px 0">
       <el-col :span="12">ID: {{ orderInfo.id }}</el-col>
       <el-col :span="12">{{ orderInfo.orderTime }}</el-col>
     </el-row>
-    <el-row style="margin: 5px 0">
+    <el-row style="margin: 20px 0">
       <el-table :data="orderInfo.detail" max-height="500" border>
         <el-table-column prop="name" label="商品名"/>
+        <el-table-column label="数量" prop="num"/>
         <el-table-column label="支付金额">
           <template #default="scope">
-            <span>{{ scope.row.price - scope.row.discount }}</span>
+            <span>{{ (scope.row.price - scope.row.discount) * scope.row.num }}</span>
           </template>
         </el-table-column>
       </el-table>
     </el-row>
-    <el-row style="margin: 5px 0">
+    <el-row style="margin: 20px 0">
       <el-col :span="6">{{ orderInfo.state ? '已完成' : '未完成' }}</el-col>
       <el-col :span="12">收银员: {{ orderInfo.stuffId }}</el-col>
       <el-col :span="6">总支付金额: {{ orderInfo.price }}</el-col>
@@ -81,6 +88,8 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import { CheckOrderItem, Order, ShoppingItem } from '@/api/types'
 import { ShoppingCartFull } from '@element-plus/icons-vue'
 import { ElDialog } from 'element-plus'
+
+// Shopping
 
 const items = ref<ShoppingItem[]>([])
 
@@ -137,7 +146,7 @@ function getCartSummary () {
   }
 }
 
-function addItem (id: string) {
+function addItemToCart (id: string) {
   let cnt = 0
   itemsInCart.value.forEach(value => {
     if (value.id === id) {
@@ -152,10 +161,10 @@ function addItem (id: string) {
       num: 1
     })
   }
-  items.value.forEach(value => value.id === id ? value.stock-- : '')
+  items.value.forEach(value => value.id === id ? value.num-- : '')
 }
 
-function removeItem (id: string) {
+function removeItemFromCart (id: string) {
   itemsInCart.value.forEach((value, index) => {
     if (value.id === id) {
       value.num--
@@ -164,11 +173,15 @@ function removeItem (id: string) {
       itemsInCart.value.splice(index, 1)
     }
   })
-  items.value.forEach(value => value.id === id ? value.stock++ : '')
+  items.value.forEach(value => value.id === id ? value.num++ : '')
 }
 
 function handleOrderSettlement () {
-  axios.post('/shopping/checkOrder').then(response => {
+  axios.post('/shopping/checkOrder', JSON.stringify(itemsInCart.value), {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
     if (response.data.status === 0) {
       orderInfo.value = response.data.data
       orderDialogActive.value = true
