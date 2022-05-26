@@ -1,5 +1,14 @@
 import Mock, { Random } from 'mockjs'
-import { getOrder, getPurchasePlan, getShoppingItems, getStorage, getStuffs, getSuppliers, getVips } from '@/mock/data'
+import {
+  getAllStorehouseId,
+  getOrder,
+  getPurchasePlan,
+  getShoppingItems,
+  getStorage,
+  getStuffs,
+  getSuppliers,
+  getVips
+} from '@/mock/data'
 import { MyResponse } from '@/api/types'
 
 Mock.mock('/shopping/items', 'get', {
@@ -68,4 +77,15 @@ Mock.mock('/shopping/return', 'post', {
   data: null
 } as MyResponse)
 
+Mock.mock('/store/getStorageID', 'get', {
+  status: 0,
+  msg: '',
+  data: getAllStorehouseId(Random.integer(3, 6))
+} as MyResponse)
+
+Mock.mock(/\/store\/getStorage\/\?id=.*/, 'get', {
+  status: 0,
+  msg: '',
+  data: getStorage()
+} as MyResponse)
 export default Mock

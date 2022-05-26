@@ -30,6 +30,14 @@ export function getOrder (): Order {
   return order
 }
 
+export function getAllStorehouseId (num = 5): string[] {
+  const id: string[] = []
+  for (let i = 0; i < num; i++) {
+    id.push(Random.id())
+  }
+  return id
+}
+
 export function getStoreItems (num = 20): StoreItem[] {
   const items: StoreItem[] = []
 

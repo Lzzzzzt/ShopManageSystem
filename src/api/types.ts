@@ -105,7 +105,8 @@ export type ResData = Array<ShoppingItem> |
   ShoppingItem |
   null |
   { isVip: boolean } |
-  Supplier[]
+  Supplier[] |
+  string[]
 
 export interface MyResponse {
   status: number,

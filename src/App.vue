@@ -48,13 +48,13 @@
             </el-icon>
             <span>管理</span>
           </template>
-          <el-menu-item index="3-1">
+          <el-menu-item :route="{name: 'stuff'}" index="3-1">
             <span>员工</span>
           </el-menu-item>
-          <el-menu-item index="3-2">
+          <el-menu-item :route="{name: 'vip'}" index="3-2">
             <span>VIP</span>
           </el-menu-item>
-          <el-menu-item index="3-3">
+          <el-menu-item :route="{name: 'supplier'}" index="3-3">
             <span>供应商</span>
           </el-menu-item>
         </el-sub-menu>
