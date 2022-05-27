@@ -74,6 +74,7 @@
     </el-row>
   </el-dialog>
   <el-button :icon="Plus" circle class="add" size="large" type="primary" @click="addStuffDialogActive = true"/>
+  <el-alert v-show="errMsg !== ''" :title="errMsg" class="alert" type="error"/>
 </template>
 
 <script lang="ts" setup>
@@ -103,20 +104,29 @@ const addingStuff = ref<Stuff>({
   phone: ''
 } as Stuff)
 
-function handleAddStuffSave () {
-  axios.post('/manage/employee/add', JSON.stringify(addingStuff.value), {
-    headers: { 'Content-Type': 'application/json' }
-  }).then(response => {
-    stuffInfo.value = response.data.data
-  }).catch(err => console.log(err))
+const errMsg = ref<string>('')
 
-  addingStuff.value = {
-    name: '',
-    id: '',
-    title: '',
-    phone: ''
-  } as Stuff
-  addStuffDialogActive.value = false
+function handleAddStuffSave () {
+  console.log([...stuffInfoIdMap.value.keys()].indexOf(addingStuff.value.id))
+
+  if ([...stuffInfoIdMap.value.keys()].indexOf(addingStuff.value.id) !== -1) {
+    errMsg.value = '重复ID'
+  } else {
+    axios.post('/manage/employee/add', JSON.stringify(addingStuff.value), {
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => {
+      stuffInfo.value = response.data.data
+    }).catch(err => console.log(err))
+
+    errMsg.value = ''
+    addingStuff.value = {
+      name: '',
+      id: '',
+      title: '',
+      phone: ''
+    } as Stuff
+    addStuffDialogActive.value = false
+  }
 }
 
 function handleChangeStuffInfo (id: string) {
@@ -162,5 +172,14 @@ onMounted(() => {
   position: absolute;
   top: 90%;
   left: 95%;
+}
+
+.alert {
+  z-index: 9999;
+  position: absolute;
+  width: 30%;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

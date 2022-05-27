@@ -100,6 +100,7 @@
     </el-row>
   </el-dialog>
   <el-button :icon="Plus" circle class="add" size="large" type="primary" @click="addVipDialogActive = true"/>
+  <el-alert v-show="errMsg !== ''" :title="errMsg" class="alert" type="error"/>
 </template>
 
 <script lang="ts" setup>
@@ -128,6 +129,8 @@ const currentAddingVip = ref<Vip>({
   phone: null
 } as Vip)
 
+const errMsg = ref<string>('')
+
 function handleChangeVipInfo (id: string) {
   changeDialogActive.value = true
   currentChangingVip.value = vipInfoMap.value.get(id) as Vip
@@ -152,12 +155,25 @@ function handleSaveChange () {
 }
 
 function handleSaveAdded () {
-  axios.post('/manage/vip/add', JSON.stringify(currentAddingVip.value), {
-    headers: { 'Content-Type': 'application/json' }
-  }).then(response => {
-    vipInfo.value = response.data.data
+  if ([...vipInfoMap.value.keys()].indexOf(currentAddingVip.value.id) !== -1) {
+    errMsg.value = '重复ID'
+  } else {
+    axios.post('/manage/vip/add', JSON.stringify(currentAddingVip.value), {
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => {
+      vipInfo.value = response.data.data
+    }).catch(err => console.log(err))
+
+    errMsg.value = ''
+    currentAddingVip.value = {
+      name: '',
+      id: '',
+      phone: '',
+      address: '',
+      gender: ''
+    } as Vip
     addVipDialogActive.value = false
-  }).catch(err => console.log(err))
+  }
 }
 
 onMounted(() => {
@@ -173,5 +189,14 @@ onMounted(() => {
   position: absolute;
   top: 90%;
   left: 95%;
+}
+
+.alert {
+  z-index: 9999;
+  position: absolute;
+  width: 30%;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
