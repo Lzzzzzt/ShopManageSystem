@@ -44,7 +44,7 @@ Mock.mock('/store/plan/show', 'get', {
 Mock.mock('/manage/employee/show', 'get', {
   status: 0,
   msg: '',
-  data: getStuffs(Random.integer(10, 15))
+  data: getStuffs(Random.integer(20, 30))
 } as MyResponse)
 
 Mock.mock('/manage/vip/show', 'get', {
@@ -87,5 +87,29 @@ Mock.mock(/\/store\/getStorage\/\?id=.*/, 'get', {
   status: 0,
   msg: '',
   data: getStorage()
+} as MyResponse)
+
+Mock.mock(/\/manage\/employee\/update/, 'post', {
+  status: 0,
+  msg: '',
+  data: getStuffs(Random.integer(20, 30))
+} as MyResponse)
+
+Mock.mock(/\/manage\/employee\/del/, 'post', {
+  status: 0,
+  msg: '',
+  data: getStuffs(Random.integer(20, 30))
+} as MyResponse)
+
+Mock.mock(/\/manage\/vip\/show/, 'get', {
+  status: 0,
+  msg: '',
+  data: getVips(Random.integer(10, 20))
+} as MyResponse)
+
+Mock.mock(/\/manage\/vip\/(del)|(add)|(update)/, 'post', {
+  status: 0,
+  msg: '',
+  data: getVips(Random.integer(10, 20))
 } as MyResponse)
 export default Mock
