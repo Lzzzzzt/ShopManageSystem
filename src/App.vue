@@ -18,6 +18,9 @@
           <el-menu-item :route="{name: 'return'}" index="1-2">
             <span>退货</span>
           </el-menu-item>
+          <el-menu-item :route="{name: 'query'}" index="1-3">
+            <span>订单查询</span>
+          </el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
@@ -34,7 +37,7 @@
               <span>商品</span>
             </template>
             <el-menu-item index="2-2-1" :route="{name: 'ItemAdd'}">
-              进货
+              商品入库
             </el-menu-item>
           </el-sub-menu>
           <el-menu-item index="2-3" :route="{name: 'plan'}">

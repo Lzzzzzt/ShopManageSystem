@@ -89,12 +89,6 @@
         <el-input v-model="currentAddingVip.gender"/>
       </el-col>
     </el-row>
-    <el-row align="middle" style="margin-top: 20px">
-      <el-col :span="4">入会时间</el-col>
-      <el-col :span="20">
-        <el-input v-model="currentAddingVip.inTime" disabled/>
-      </el-col>
-    </el-row>
     <el-row justify="end" style="margin-top: 20px">
       <el-button size="large" type="warning" @click="handleSaveAdded">保存</el-button>
     </el-row>
@@ -108,6 +102,7 @@ import { computed, onMounted, ref } from 'vue'
 import { Vip } from '@/api/types'
 import { Plus } from '@element-plus/icons-vue'
 import axios from 'axios'
+import moment from 'moment'
 
 const vipInfo = ref<Vip[]>([])
 const vipInfoMap = computed<Map<string, Vip>>(() => {
@@ -158,6 +153,7 @@ function handleSaveAdded () {
   if ([...vipInfoMap.value.keys()].indexOf(currentAddingVip.value.id) !== -1) {
     errMsg.value = '重复ID'
   } else {
+    currentChangingVip.value.inTime = moment().calendar()
     axios.post('/manage/vip/add', JSON.stringify(currentAddingVip.value), {
       headers: { 'Content-Type': 'application/json' }
     }).then(response => {

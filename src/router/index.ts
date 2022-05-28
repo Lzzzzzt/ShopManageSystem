@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue'
 import PurchaseView from '@/views/Shopping/PurchaseView.vue'
 import ShoppingView from '@/views/Shopping/ShoppingView.vue'
 import ReturnView from '@/views/Shopping/ReturnView.vue'
+import QueryOrderView from '@/views/Shopping/QueryOrderView.vue'
 
 import StockView from '@/views/StoreHouse/StockView.vue'
 import StorehouseView from '@/views/StoreHouse/StorehouseView.vue'
@@ -36,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/shopping/return',
         name: 'return',
         component: ReturnView
+      },
+      {
+        path: '/shopping/query-order',
+        name: 'query',
+        component: QueryOrderView
       }
     ]
   },

@@ -40,23 +40,19 @@ export interface Storage {
   items: Array<StoreItem>
 }
 
-export interface PurchaseItem {
-  storeHouseId: string,
-  itemId: string,
-  itemNum: number,
-}
-
 // 进货计划
 export interface Plan {
   itemId: string,
   itemName: string,
   itemNum: number,
   SupplierName: string,
+  SupplierId: string,
 }
 
 export interface PurchasePlan {
   id: string,
   plans: Array<Plan>
+  status: number, // 0 成功 1 失败
 }
 
 // 管理
@@ -85,26 +81,21 @@ export interface Supplier {
   address: string,
   email: string,
   phone: string,
-}
-
-export interface SuppliedItem {
-  id: string,
-  price: number,
-  num: number,
+  items: Array<ShoppingItem>
 }
 
 export type ResData = Array<ShoppingItem> |
   Array<number> |
   boolean |
-  Array<SuppliedItem> |
   Array<Vip> |
   Array<Stuff> |
-  PurchasePlan[] |
+  PurchasePlan |
   Storage |
   Order |
   ShoppingItem |
   null |
   { isVip: boolean } |
+  Supplier |
   Supplier[] |
   string[]
 

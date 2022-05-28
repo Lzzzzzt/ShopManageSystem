@@ -69,7 +69,8 @@ export function getPlans (num = 5): Plan[] {
       itemId: Random.id(),
       itemName: Random.cword(),
       itemNum: Random.integer(1, 100),
-      SupplierName: Random.name()
+      SupplierName: Random.name(),
+      SupplierId: Random.id()
     })
   }
 
@@ -82,7 +83,8 @@ export function getPurchasePlan (num = 3): PurchasePlan[] {
   for (let i = 0; i < num; i++) {
     plans.push({
       id: Random.id(),
-      plans: getPlans(Random.integer(1, 5))
+      plans: getPlans(Random.integer(1, 5)),
+      status: Random.integer(0, 1)
     })
   }
 
@@ -121,17 +123,36 @@ export function getVips (num = 10): Vip[] {
   return Vip
 }
 
-export function getSuppliers (num = 5): Supplier[] {
-  const suppliers: Supplier[] = []
+export function getSupplier (): Supplier {
+  return {
+    id: Random.id(),
+    name: Random.cword(),
+    address: Random.csentence(15, 30),
+    email: Random.email(),
+    phone: Random.integer(10000000000, 99999999999).toString(),
+    items: getShoppingItems(Random.integer(15, 30))
+  }
+}
 
+export function getSuppliers (num = 10): Supplier[] {
+  const list: Supplier[] = []
   for (let i = 0; i < num; i++) {
-    suppliers.push({
+    list.push({
       id: Random.id(),
       name: Random.cword(),
       address: Random.csentence(15, 30),
       email: Random.email(),
-      phone: Random.integer(10000000000, 99999999999).toString()
+      phone: Random.integer(10000000000, 99999999999).toString(),
+      items: getShoppingItems(Random.integer(15, 30))
     })
   }
-  return suppliers
+  return list
+}
+
+export function getAllPlanId (num = 10): string[] {
+  const id: string[] = []
+  for (let i = 0; i < num; i++) {
+    id.push(Random.id())
+  }
+  return id
 }

@@ -107,8 +107,6 @@ const addingStuff = ref<Stuff>({
 const errMsg = ref<string>('')
 
 function handleAddStuffSave () {
-  console.log([...stuffInfoIdMap.value.keys()].indexOf(addingStuff.value.id))
-
   if ([...stuffInfoIdMap.value.keys()].indexOf(addingStuff.value.id) !== -1) {
     errMsg.value = '重复ID'
   } else {
