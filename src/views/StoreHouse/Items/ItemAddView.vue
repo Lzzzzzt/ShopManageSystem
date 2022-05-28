@@ -110,7 +110,7 @@ const next = (value = 0) => {
       }
       break
     case 1:
-      active.value = save(false)
+      active.value = save(true)
       break
     case 2:
       active.value = save(false)
@@ -135,7 +135,7 @@ const showMsg = ref<boolean>(false)
 const isSuccess = ref<boolean>(false)
 
 const save = (isInTable: boolean): number => {
-  if ([...itemsMap.value.keys()].indexOf(item.value.itemId) !== -1) {
+  if (!isInTable && [...itemsMap.value.keys()].indexOf(item.value.itemId) !== -1) {
     isSuccess.value = false
     showMsg.value = true
     setTimeout(() => {
