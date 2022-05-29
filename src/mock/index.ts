@@ -157,4 +157,11 @@ Mock.mock('/store/item/add', 'post', {
   data: null
 } as MyResponse)
 
+// shopping/isVip/?id=111
+Mock.mock(/\/shopping\/isVip\/\?id=.*/, 'get', {
+  status: 0,
+  msg: '',
+  data: Random.boolean()
+} as MyResponse)
+
 export default Mock

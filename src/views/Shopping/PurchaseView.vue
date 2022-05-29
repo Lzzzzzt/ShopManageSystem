@@ -5,12 +5,12 @@
         <template #header>
           <div style="display:flex; justify-content: space-between">
             <span>商品</span>
-            <el-button plain type="info">退货</el-button>
+            <el-button plain type="success" @click="vipDialogActive = true">会员</el-button>
           </div>
         </template>
         <el-table height="600px" :data="items" stripe>
           <el-table-column label="商品名" prop="name"/>
-          <el-table-column label="折扣" prop="discount"/>
+          <el-table-column label="会员优惠" prop="discount"/>
           <el-table-column label="价格" prop="price"/>
           <el-table-column label="库存" prop="num"/>
           <el-table-column label="操作">
@@ -80,20 +80,34 @@
       <el-col :span="6">总支付金额: {{ orderInfo.price }}</el-col>
     </el-row>
   </el-dialog>
+  <el-dialog v-model="vipDialogActive">
+    <el-row style="margin-top: 30px">
+      <el-col>{{ isVip ? '您是VIP' : '您不是VIP' }}</el-col>
+    </el-row>
+    <el-row style="margin-top: 30px">
+      <el-col>
+        <el-input v-model="vipId"/>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top: 30px">
+      <el-col>
+        <el-button @click="isVipQuery">提交</el-button>
+      </el-col>
+    </el-row>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import axios from 'axios'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import { CheckOrderItem, Order, ShoppingItem } from '@/api/types'
 import { ShoppingCartFull } from '@element-plus/icons-vue'
 import { ElDialog } from 'element-plus'
-
 // Shopping
 
 const items = ref<ShoppingItem[]>([])
 
-const itemsInCart = ref<CheckOrderItem[]>([])
+let itemsInCart = reactive<CheckOrderItem[]>([])
 
 const itemNameMap = computed<Map<string, string>>(() => {
   const im = new Map<string, string>()
@@ -119,26 +133,42 @@ const orderDialogActive = ref<boolean>(false)
 
 const orderInfo = ref<Order>()
 
+const vipDialogActive = ref<boolean>(false)
+
+const isVip = ref<boolean>(false)
+
+const vipId = ref<string>('')
+
+const isVipQuery = () => {
+  axios.get('/shopping/isVip/', {
+    params: {
+      id: vipId.value
+    }
+  }).then(res => {
+    isVip.value = res.data.data
+  }).catch(err => console.log(err))
+}
+
 function getCartSummary () {
-  if (itemsInCart.value.length !== 0) {
+  if (itemsInCart.length !== 0) {
     const res: string[] = []
 
     res.push('合计')
 
-    const discount = itemsInCart.value.map((value, index) => {
-      return itemDiscountMap.value.get(value.id) as number * itemsInCart.value[index].num
+    const discount = itemsInCart.map((value, index) => {
+      return itemDiscountMap.value.get(value.id) as number * itemsInCart[index].num
     }).reduce((pre, cur) => pre + cur)
 
-    const price = itemsInCart.value.map((value, index) => {
-      return itemPriceMap.value.get(value.id) as number * itemsInCart.value[index].num
+    const price = itemsInCart.map((value, index) => {
+      return itemPriceMap.value.get(value.id) as number * itemsInCart[index].num
     }).reduce((pre, cur) => pre + cur)
 
-    const num = itemsInCart.value.map(value => value.num).reduce((pre, cur) => pre + cur)
+    const num = itemsInCart.map(value => value.num).reduce((pre, cur) => pre + cur)
 
-    res.push(discount.toString())
+    res.push(isVip.value ? discount.toString() : '0')
     res.push(price.toString())
     res.push(num.toString())
-    res.push(`¥${price - discount}`)
+    res.push(`¥${price - (isVip.value ? discount : 0)}`)
 
     return res
   } else {
@@ -148,15 +178,15 @@ function getCartSummary () {
 
 function addItemToCart (id: string) {
   let cnt = 0
-  itemsInCart.value.forEach(value => {
+  itemsInCart.forEach(value => {
     if (value.id === id) {
       value.num++
       return
     }
     cnt++
   })
-  if (cnt === itemsInCart.value.length) {
-    itemsInCart.value.push({
+  if (cnt === itemsInCart.length) {
+    itemsInCart.push({
       id,
       num: 1
     })
@@ -165,19 +195,22 @@ function addItemToCart (id: string) {
 }
 
 function removeItemFromCart (id: string) {
-  itemsInCart.value.forEach((value, index) => {
+  itemsInCart.forEach((value, index) => {
     if (value.id === id) {
       value.num--
     }
     if (value.num === 0) {
-      itemsInCart.value.splice(index, 1)
+      itemsInCart.splice(index, 1)
     }
   })
   items.value.forEach(value => value.id === id ? value.num++ : '')
 }
 
 function handleOrderSettlement () {
-  axios.post('/shopping/checkOrder', JSON.stringify(itemsInCart.value), {
+  axios.post('/shopping/checkOrder', JSON.stringify({
+    isVip: isVip.value,
+    items: itemsInCart
+  }), {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -191,7 +224,7 @@ function handleOrderSettlement () {
   }).catch(err => console.log(err))
   nextTick(() => {
     cartDialogActive.value = false
-    itemsInCart.value = []
+    itemsInCart = []
   })
 }
 
