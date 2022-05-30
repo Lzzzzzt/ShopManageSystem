@@ -53,7 +53,7 @@
       </el-table-column>
     </el-table>
     <el-button type="primary" style="margin: 10px 0 10px 100%; transform: translateX(-100%)"
-               :disabled="itemsInCart.length === 0" @click="handleOrderSettlement">
+               :disabled="itemsInCart.length === 0" @click="handleOrderSettlementCheck">
       结算
     </el-button>
   </el-dialog>
@@ -94,6 +94,18 @@
         <el-button @click="isVipQuery">提交</el-button>
       </el-col>
     </el-row>
+  </el-dialog>
+  <el-dialog v-model="stuffDialogActive" top="20vh" width="40%">
+    <template #header>
+      <span>员工</span>
+    </template>
+    <el-select v-model="selectedStuffId">
+      <el-option v-for="id in allStuffId" :key="id" :label="id" :value="id"/>
+    </el-select>
+    <el-button :disabled="selectedStuffId === ''" style="margin: 10px 0 10px 100%; transform: translateX(-100%)"
+               type="primary" @click="handleOrderSettlement">
+      结算
+    </el-button>
   </el-dialog>
 </template>
 
@@ -138,6 +150,12 @@ const vipDialogActive = ref<boolean>(false)
 const isVip = ref<boolean>(false)
 
 const vipId = ref<string>('')
+
+const stuffDialogActive = ref<boolean>(false)
+
+const allStuffId = ref<string[]>([])
+
+const selectedStuffId = ref<string>('')
 
 const isVipQuery = () => {
   axios.get('/shopping/isVip/', {
@@ -206,9 +224,14 @@ function removeItemFromCart (id: string) {
   items.value.forEach(value => value.id === id ? value.num++ : '')
 }
 
+function handleOrderSettlementCheck () {
+  stuffDialogActive.value = true
+}
+
 function handleOrderSettlement () {
   axios.post('/shopping/checkOrder', JSON.stringify({
     isVip: isVip.value,
+    stuffId: selectedStuffId.value,
     items: itemsInCart
   }), {
     headers: {
@@ -224,6 +247,8 @@ function handleOrderSettlement () {
   }).catch(err => console.log(err))
   nextTick(() => {
     cartDialogActive.value = false
+    stuffDialogActive.value = false
+    selectedStuffId.value = ''
     itemsInCart = []
   })
 }
@@ -235,6 +260,11 @@ onMounted(() => {
     })
     .catch(err => {
       console.log(err)
+    })
+
+  axios.get('/manage/employee/id')
+    .then(res => {
+      allStuffId.value = res.data.data
     })
 })
 </script>

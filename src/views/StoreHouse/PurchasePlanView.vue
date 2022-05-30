@@ -7,9 +7,9 @@
     </el-col>
     <el-col v-show="purchasePlanInfo" :span="4">
       <div style="display:flex; justify-content: end; align-items: center">
-        <span v-if="purchasePlanInfo" style="margin-right: 20px;">{{
-            purchasePlanInfo.status ? '已完成' : '未完成'
-          }}</span>
+        <span v-if="purchasePlanInfo" style="margin-right: 20px;">
+          {{ purchasePlanInfo.status ? '已完成' : '未完成' }}
+        </span>
         <el-button v-show="purchasePlanInfo" :icon="CloseBold" circle type="danger" @click="handleDel"/>
         <el-button :icon="Plus" circle type="primary" @click="addItemDialogActive = true"/>
       </div>
@@ -59,8 +59,8 @@
     <el-row justify="center" style="margin: 30px 0">
       <el-col :span="4">供应商</el-col>
       <el-col :span="20">
-        <el-input :model-value="2" disabled/>
-        <!--        <el-input :model-value="allSupplierInfoMap.get(addingItems.SupplierId).name" disabled/>-->
+        <!--        <el-input :model-value="2" disabled/>-->
+        <el-input :model-value="allSupplierInfoMap.get(addingItems.SupplierId).name" disabled/>
       </el-col>
     </el-row>
   </el-dialog>

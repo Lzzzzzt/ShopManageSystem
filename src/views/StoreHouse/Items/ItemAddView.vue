@@ -67,6 +67,18 @@
       </el-col>
     </el-row>
     <el-row align="middle" justify="center" style="margin-top: 50px">
+      <el-col :span="2">价格</el-col>
+      <el-col :span="12">
+        <el-input-number v-model="item.price"/>
+      </el-col>
+    </el-row>
+    <el-row align="middle" justify="center" style="margin-top: 50px">
+      <el-col :span="2">会员折扣</el-col>
+      <el-col :span="12">
+        <el-input-number v-model="item.discount"/>
+      </el-col>
+    </el-row>
+    <el-row align="middle" justify="center" style="margin-top: 50px">
       <el-col :span="2">仓库ID</el-col>
       <el-col :span="12">
         <el-select v-model="item.storehouseId">
@@ -96,6 +108,8 @@ interface Item {
   num: number
   itemName: string
   storehouseId: string
+  discount: number,
+  price: number,
 }
 
 const active = ref<number>(0)
@@ -120,7 +134,11 @@ const next = (value = 0) => {
 
 const storehouseIds = ref<string[]>([])
 
-const item = ref<Item>({ num: 0 } as Item)
+const item = ref<Item>({
+  num: 0,
+  discount: 0,
+  price: 0
+} as Item)
 
 const items = ref<ShoppingItem[]>([])
 
@@ -145,10 +163,7 @@ const save = (isInTable: boolean): number => {
   }
 
   axios.post('/store/item/add', JSON.stringify({
-    storeHouseId: item.value.storehouseId,
-    itemId: item.value.itemId,
-    itemNum: item.value.num,
-    itemName: item.value.itemName,
+    ...item.value,
     isInTable: isInTable
   })).then(response => {
     isSuccess.value = !response.data.status

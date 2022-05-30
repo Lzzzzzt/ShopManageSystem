@@ -164,4 +164,10 @@ Mock.mock(/\/shopping\/isVip\/\?id=.*/, 'get', {
   data: Random.boolean()
 } as MyResponse)
 
+Mock.mock(/\/manage\/employee\/id/, 'get', {
+  status: 0,
+  msg: '',
+  data: getAllPlanId(Random.integer(20, 30))
+} as MyResponse)
+
 export default Mock
