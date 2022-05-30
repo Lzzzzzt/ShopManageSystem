@@ -38,8 +38,8 @@
     <el-row justify="center" style="margin: 30px 0">
       <el-col :span="4">商品名</el-col>
       <el-col :span="20">
-        <el-input :model-value="1" disabled/>
-        <!--        <el-input :model-value="allItemsInfoMap.get(addingItems.itemId).name" disabled/>-->
+        <!--        <el-input :model-value="1" disabled/>-->
+        <el-input :model-value="allItemsInfoMap.get(addingItems.itemId).name" disabled/>
       </el-col>
     </el-row>
     <el-row justify="center" style="margin: 30px 0">
@@ -68,7 +68,7 @@
 
 <script lang="ts" setup>
 import { CloseBold, Plus, Remove } from '@element-plus/icons-vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Plan, PurchasePlan, ShoppingItem, Supplier } from '@/api/types'
 import axios from 'axios'
 
@@ -81,6 +81,13 @@ const allItemsInfo = ref<ShoppingItem[]>([])
 const allItemsInfoMap = computed<Map<string, ShoppingItem>>(() => {
   const map = new Map<string, ShoppingItem>()
   allItemsInfo.value.forEach(value => map.set(value.id, value))
+  map.set('', {
+    id: '',
+    name: '',
+    discount: 0,
+    price: 0,
+    num: 0
+  })
   return map
 })
 
@@ -88,10 +95,24 @@ const allSupplierInfo = ref<Supplier[]>([])
 const allSupplierInfoMap = computed<Map<string, Supplier>>(() => {
   const map = new Map<string, Supplier>()
   allSupplierInfo.value.forEach(value => map.set(value.id, value))
+  map.set('', {
+    id: '',
+    name: '',
+    address: '',
+    email: '',
+    phone: '',
+    items: []
+  })
   return map
 })
 
-const addingItems = ref<Plan>({} as Plan)
+const addingItems = ref<Plan>({
+  itemId: '',
+  itemName: '',
+  itemNum: 0,
+  SupplierName: '',
+  SupplierId: ''
+} as Plan)
 
 const getPurchasePlan = () => {
   axios.get('/store/plan/show', {
@@ -111,29 +132,27 @@ const handleDel = () => {
   purchasePlanInfo.value = undefined
 }
 
-onMounted(() => {
-  axios.get('/store/plan/getId').then(
-    response => {
-      allPlanId.value = response.data.data
-    }
-  ).catch(err => console.log(err))
+axios.get('/store/plan/getId').then(
+  response => {
+    allPlanId.value = response.data.data
+  }
+).catch(err => console.log(err))
 
-  axios.get('/shopping/items').then(
-    response => {
-      allItemsInfo.value = response.data.data
-    }
-  ).then(
-    err => console.log(err)
-  )
+axios.get('/shopping/items').then(
+  response => {
+    allItemsInfo.value = response.data.data
+  }
+).then(
+  err => console.log(err)
+)
 
-  axios.get('/manage/supplier/show').then(
-    response => {
-      allSupplierInfo.value = response.data.data
-    }
-  ).catch(
-    err => console.log(err)
-  )
-})
+axios.get('/manage/supplier/show').then(
+  response => {
+    allSupplierInfo.value = response.data.data
+  }
+).catch(
+  err => console.log(err)
+)
 
 </script>
 <style scoped>
