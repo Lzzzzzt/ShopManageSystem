@@ -71,8 +71,11 @@ const returnItems = ref<ShoppingItem[]>([])
 const returnOrderId = ref<string>('')
 
 function handleReturnOrderQuery () {
-  axios.post('/shopping/returnCheck', JSON.stringify({ id: returnOrderId.value }), {
-    headers: { 'Content-Type': 'application/json' }
+  console.log(returnOrderId.value)
+  axios.post('/shopping/returnCheck', { id: returnOrderId.value }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
   }).then(response => {
     queryOrderInfo.value = response.data.data
   }).catch(err => console.log(err))

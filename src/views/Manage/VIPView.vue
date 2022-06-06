@@ -7,7 +7,7 @@
         <el-table-column label="电话" prop="phone"/>
         <el-table-column label="住址" prop="address"/>
         <el-table-column label="性别" prop="gender"/>
-        <el-table-column label="入会时间" prop="inTime"/>
+        <el-table-column label="入会时间" prop="date"/>
         <el-table-column label="操作">
           <template #default="scope">
             <el-button plain type="primary" @click="handleChangeVipInfo(scope.row.id)">修改信息</el-button>
@@ -17,12 +17,6 @@
     </el-col>
   </el-row>
   <el-dialog v-model="changeDialogActive">
-    <el-row align="middle" style="margin-top: 20px">
-      <el-col :span="4">会员ID</el-col>
-      <el-col :span="20">
-        <el-input v-model="currentChangingVip.id" disabled/>
-      </el-col>
-    </el-row>
     <el-row align="middle" style="margin-top: 20px">
       <el-col :span="4">姓名</el-col>
       <el-col :span="20">
@@ -45,12 +39,6 @@
       <el-col :span="4">性别</el-col>
       <el-col :span="20">
         <el-input v-model="currentChangingVip.gender"/>
-      </el-col>
-    </el-row>
-    <el-row align="middle" style="margin-top: 20px">
-      <el-col :span="4">入会时间</el-col>
-      <el-col :span="20">
-        <el-input v-model="currentChangingVip.inTime" disabled/>
       </el-col>
     </el-row>
     <el-row justify="space-between" style="margin-top: 20px">
@@ -118,10 +106,10 @@ const addVipDialogActive = ref<boolean>(false)
 const currentAddingVip = ref<Vip>({
   id: '',
   name: '',
-  inTime: '',
+  date: moment().format('YYYY-MM-DD HH:mm:ss'),
   address: null,
   gender: null,
-  phone: null
+  phone: ''
 } as Vip)
 
 const errMsg = ref<string>('')
@@ -153,7 +141,7 @@ function handleSaveAdded () {
   if ([...vipInfoMap.value.keys()].indexOf(currentAddingVip.value.id) !== -1) {
     errMsg.value = '重复ID'
   } else {
-    currentChangingVip.value.inTime = moment().calendar()
+    currentChangingVip.value.date = moment().format('YYYY-MM-DD HH:mm:ss')
     axios.post('/manage/vip/add', JSON.stringify(currentAddingVip.value), {
       headers: { 'Content-Type': 'application/json' }
     }).then(response => {
@@ -166,7 +154,8 @@ function handleSaveAdded () {
       id: '',
       phone: '',
       address: '',
-      gender: ''
+      gender: '',
+      date: moment().format('YYYY-MM-DD HH:mm:ss')
     } as Vip
     addVipDialogActive.value = false
   }

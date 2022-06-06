@@ -22,7 +22,7 @@ export function getOrder (): Order {
 
   order.orderTime = Random.datetime()
   order.price = Random.integer(300, 10000)
-  order.state = 1
+  order.status = 1
   order.detail = getShoppingItems(Random.integer(3, 8))
   order.id = Random.id()
   order.stuffId = Random.id()
@@ -113,7 +113,7 @@ export function getVips (num = 10): Vip[] {
     Vip.push({
       id: Random.id(),
       name: Random.cname(),
-      inTime: Random.datetime(),
+      date: Random.datetime(),
       address: Random.csentence(20, 30),
       gender: Random.boolean() ? '男' : '女',
       phone: Random.integer(10000000000, 99999999999).toString()

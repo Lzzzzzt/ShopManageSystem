@@ -145,13 +145,13 @@ const addingSupplier = ref<Supplier>({} as Supplier)
 const errMsg = ref<string>('')
 
 const handleSaveAdd = () => {
-  if (allSupplierId.value.indexOf(addingSupplier.value.id)) {
+  if (allSupplierId.value.indexOf(addingSupplier.value.id) !== -1) {
     errMsg.value = '重复ID'
   } else {
-    axios.post('/manage/manage/add', JSON.stringify(addingSupplier.value), {
+    axios.post('/manage/supplier/add', JSON.stringify(addingSupplier.value), {
       headers: { 'Content-Type': 'application/json' }
     }).then(response => {
-      addingSupplier.value = response.data.data
+      allSupplierId.value = response.data.data
     }).catch(err => console.log(err))
 
     errMsg.value = ''

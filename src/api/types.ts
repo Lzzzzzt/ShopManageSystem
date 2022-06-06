@@ -17,7 +17,7 @@ export interface Order {
   stuffId: string,
   orderTime: string,
   price: number,
-  state: number,
+  status: number,
   detail: Array<ShoppingItem>
 }
 
@@ -68,10 +68,10 @@ export interface Stuff {
 export interface Vip {
   id: string,
   name: string,
-  inTime: string,
+  date: string,
   address: string | null,
   gender: string | null,
-  phone: string | null,
+  phone: string,
 }
 
 // 供应商

@@ -75,7 +75,7 @@
       </el-table>
     </el-row>
     <el-row style="margin: 20px 0">
-      <el-col :span="6">{{ orderInfo.state ? '已完成' : '未完成' }}</el-col>
+      <el-col :span="6">{{ orderInfo.status ? '已完成' : '未完成' }}</el-col>
       <el-col :span="12">收银员: {{ orderInfo.stuffId }}</el-col>
       <el-col :span="6">总支付金额: {{ orderInfo.price }}</el-col>
     </el-row>
@@ -163,7 +163,8 @@ const isVipQuery = () => {
       id: vipId.value
     }
   }).then(res => {
-    isVip.value = res.data.data
+    console.log(res.data.data.isVip)
+    isVip.value = res.data.data.isVip
   }).catch(err => console.log(err))
 }
 
@@ -186,7 +187,7 @@ function getCartSummary () {
     res.push(isVip.value ? discount.toString() : '0')
     res.push(price.toString())
     res.push(num.toString())
-    res.push(`¥${price - (isVip.value ? discount : 0)}`)
+    res.push(`¥${(isVip.value ? discount : 0)}`)
 
     return res
   } else {

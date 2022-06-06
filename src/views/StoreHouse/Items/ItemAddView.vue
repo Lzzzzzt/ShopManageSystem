@@ -99,7 +99,7 @@
 
 <script lang="ts" setup>
 import { HomeFilled, QuestionFilled } from '@element-plus/icons-vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import axios from 'axios'
 import { ShoppingItem } from '@/api/types'
 
@@ -110,6 +110,7 @@ interface Item {
   storehouseId: string
   discount: number,
   price: number,
+  name: string
 }
 
 const active = ref<number>(0)
@@ -140,6 +141,12 @@ const item = ref<Item>({
   price: 0
 } as Item)
 
+watch(item, () => {
+  if (active.value === 1) {
+    item.value.itemName = itemsMap.value.get(item.value.itemId) as string
+  }
+})
+
 const items = ref<ShoppingItem[]>([])
 
 const itemsMap = computed<Map<string, string>>(() => {
@@ -165,7 +172,11 @@ const save = (isInTable: boolean): number => {
   axios.post('/store/item/add', JSON.stringify({
     ...item.value,
     isInTable: isInTable
-  })).then(response => {
+  }), {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
     isSuccess.value = !response.data.status
     showMsg.value = true
     setTimeout(() => {

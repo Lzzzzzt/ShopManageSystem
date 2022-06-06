@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="30" justify="center" style="margin: 30px 0">
     <el-col :span="20">
-      <el-input v-model="returnOrderId" placeholder="请输入要查询的订单ID"/>
+      <el-input v-model="queryOrderId" placeholder="请输入要查询的订单ID"/>
     </el-col>
     <el-col :span="1.5">
       <el-button @click="handleReturnOrderQuery">查询</el-button>
@@ -18,7 +18,7 @@
         <el-table-column label="数量" prop="num"/>
         <el-table-column label="支付金额">
           <template #default="scope">
-            <span>{{ (scope.row.price - scope.row.discount) * scope.row.num }}</span>
+            <span>{{ scope.row.price * scope.row.num }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -37,11 +37,13 @@ import axios from 'axios'
 
 const queryOrderInfo = ref<Order>()
 
-const returnOrderId = ref<string>('')
+const queryOrderId = ref<string>('')
 
 function handleReturnOrderQuery () {
-  axios.post('/shopping/returnCheck', JSON.stringify({ id: returnOrderId.value }), {
-    headers: { 'Content-Type': 'application/json' }
+  axios.get('/shopping/queryOrder', {
+    params: {
+      id: queryOrderId.value
+    }
   }).then(response => {
     queryOrderInfo.value = response.data.data
   }).catch(err => console.log(err))

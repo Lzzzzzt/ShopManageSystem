@@ -63,6 +63,9 @@
         <el-input :model-value="allSupplierInfoMap.get(addingItems.SupplierId).name" disabled/>
       </el-col>
     </el-row>
+    <el-row>
+      <el-button @click="handleSave">添加</el-button>
+    </el-row>
   </el-dialog>
 </template>
 
@@ -130,6 +133,20 @@ const handleDel = () => {
   }).catch(err => console.log(err))
   selectedPurchasePlanId.value = ''
   purchasePlanInfo.value = undefined
+}
+
+const handleSave = () => {
+  axios.post('/store/plan/add', JSON.stringify({
+    id: selectedPurchasePlanId.value,
+    itemId: addingItems.value.itemId,
+    itemNum: addingItems.value.itemNum,
+    SupplierId: addingItems.value.SupplierId
+  }), {
+    headers: { 'Content-Type': 'application/json' }
+  }).then(response => {
+    purchasePlanInfo.value = response.data.data
+    addItemDialogActive.value = false
+  }).catch(err => console.log(err))
 }
 
 axios.get('/store/plan/getId').then(
